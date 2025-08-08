@@ -3,9 +3,13 @@ import webbrowser
 import pyttsx3
 import musicLibrary
 import requests
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 
 recognizer=sr.Recognizer()
-NEWS_API_KEY="05a7028b7ba04b63a89695f65aa85938"
+NEWS_API_KEY=os.getenv("NEWS_API_KEY")
 
 def speak(text):
     engine=pyttsx3.init()
