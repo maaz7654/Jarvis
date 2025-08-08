@@ -2,13 +2,30 @@ import speech_recognition as sr
 import webbrowser
 import pyttsx3
 import musicLibrary
+import requests
 
 recognizer=sr.Recognizer()
+NEWS_API_KEY="05a7028b7ba04b63a89695f65aa85938"
 
 def speak(text):
     engine=pyttsx3.init()
     engine.say(text)
     engine.runAndWait()
+    
+def get_news_titles():
+    url = f"https://newsapi.org/v2/top-headlines?country=us&apiKey={NEWS_API_KEY}"
+    try:
+        response = requests.get(url)
+        data = response.json()
+
+        if data.get("status") != "ok":
+            return ["Failed to fetch news."]
+
+        # Get top 5 headlines
+        titles = [article["title"] for article in data["articles"][:5]]
+        return titles
+    except Exception as e:
+        return [f"Error fetching news: {e}"]
 
 
 def process_command(c):
@@ -22,6 +39,11 @@ def process_command(c):
         song=c.lower().split(" ")[1]
         link=musicLibrary.music[song]
         webbrowser.open(link)
+    elif "news" in c.lower():
+        headlines=get_news_titles()
+        for title in headlines:
+            speak(title)
+        speak("News Ended!")
         
     
 
