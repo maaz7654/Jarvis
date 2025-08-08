@@ -1,6 +1,7 @@
 import speech_recognition as sr
 import webbrowser
 import pyttsx3
+import musicLibrary
 
 recognizer=sr.Recognizer()
 
@@ -17,6 +18,10 @@ def process_command(c):
         webbrowser.open("https://linkedin.com")
     elif "open youtube" in c.lower():
         webbrowser.open("https://youtube.com")
+    elif c.lower().startswith("play"):
+        song=c.lower().split(" ")[1]
+        link=musicLibrary.music[song]
+        webbrowser.open(link)
         
     
 
@@ -30,7 +35,7 @@ if __name__=="__main__":
             #listen for wakeup Word
             with sr.Microphone() as source:
                 print("Listening...")
-                audio=r.listen(source,timeout=2,phrase_time_limit=1)
+                audio=r.listen(source)
             
             print("Recognizing...")
             word=r.recognize_google(audio)
@@ -41,7 +46,7 @@ if __name__=="__main__":
                 #listen for command
                 with sr.Microphone() as source:
                     print("Jarvis Active...")
-                    audio=r.listen(source,timeout=2,phrase_time_limit=1)
+                    audio=r.listen(source)
                     command=r.recognize_google(audio)
                     
                     process_command(command)
